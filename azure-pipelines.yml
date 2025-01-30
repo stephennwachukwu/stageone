@@ -1,0 +1,60 @@
+trigger:
+  - main
+
+variables:
+  # Container Registry Variables
+  containerRegistry: 'your-acr-name.azurecr.io'
+  repositoryName: 'go-api'
+  # Link to variable group
+  group: 'go-api-variables'
+
+resources:
+  repositories:
+    - repository: self
+      trigger:
+        branches:
+          include:
+            - main
+
+stages:
+- stage: Build
+  jobs:
+  - job: BuildAndTest
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    # Run tests
+    - script: |
+        go test -v ./...
+      displayName: 'Run Tests'
+      
+    # Build and push Docker image
+    - task: Docker@2
+      inputs:
+        containerRegistry: '$(ACR_SERVICE_CONNECTION)'
+        repository: '$(repositoryName)'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        tags: |
+          $(Build.BuildId)
+          latest
+
+- stage: Deploy
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+  - deployment: DeployToAzure
+    environment: 'production'
+    pool:
+      vmImage: 'ubuntu-latest'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureWebAppContainer@1
+            inputs:
+              azureSubscription: '$(AZURE_SUBSCRIPTION)'
+              appName: '$(WEBAPP_NAME)'
+              containers: '$(containerRegistry)/$(repositoryName):$(Build.BuildId)'
+              appSettings: |
+                -WEBSITES_PORT=8087
