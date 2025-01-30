@@ -1,0 +1,15 @@
+environments:
+  # development:
+  #   name: dev
+  #   webapp_name: ${WEBAPP_NAME}-dev
+  #   container_registry: ${ACR_NAME}.azurecr.io
+    
+  # staging:
+  #   name: staging
+  #   webapp_name: ${WEBAPP_NAME}-staging
+  #   container_registry: ${ACR_NAME}.azurecr.io
+    
+  production:
+    name: prod
+    webapp_name: ${WEBAPP_NAME}
+    container_registry: ${ACR_NAME}.azurecr.io
