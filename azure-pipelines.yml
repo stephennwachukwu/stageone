@@ -3,10 +3,9 @@ trigger:
 
 variables:
   # Container Registry Variables
-  containerRegistry: 'stageone.azurecr.io'
-  # repositoryName: 'stage-go-api'
+  repositoryName: 'stage-go-api'
   # Link to variable group
-  group: 'go-api-variables'
+  # group: 'go-api-variables'
 
 resources:
   repositories:
@@ -20,8 +19,7 @@ stages:
 - stage: Build
   jobs:
   - job: BuildAndTest
-    pool:
-      vmImage: 'ubuntu-latest'
+    displayName: Test and Build Docker Image Stage
     steps:
     # Run tests
     - script: |
@@ -31,7 +29,7 @@ stages:
     # Build and push Docker image
     - task: Docker@2
       inputs:
-        containerRegistry: '$(ACR_SERVICE_CONNECTION)'
+        containerRegistry: 'acrone'
         repository: '$(repositoryName)'
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
