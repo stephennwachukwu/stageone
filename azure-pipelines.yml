@@ -39,22 +39,22 @@ stages:
           $(Build.BuildId)
           latest
 
-- stage: Deploy
-  dependsOn: Build
-  condition: succeeded()
-  jobs:
-  - deployment: DeployToAzure
-    environment: 'production'
-    pool:
-      vmImage: 'ubuntu-latest'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureWebAppContainer@1
-            inputs:
-              azureSubscription: '$(AZURE_SUBSCRIPTION)'
-              appName: '$(WEBAPP_NAME)'
-              containers: '$(containerRegistry)/$(repositoryName):$(Build.BuildId)'
-              appSettings: |
-                -WEBSITES_PORT=8087
+# - stage: Deploy
+#   dependsOn: Build
+#   condition: succeeded()
+#   jobs:
+#   - deployment: DeployToAzure
+#     environment: 'production'
+#     pool:
+#       vmImage: 'ubuntu-latest'
+#     strategy:
+#       runOnce:
+#         deploy:
+#           steps:
+#           - task: AzureWebAppContainer@1
+#             inputs:
+#               azureSubscription: '$(AZURE_SUBSCRIPTION)'
+#               appName: '$(WEBAPP_NAME)'
+#               containers: '$(containerRegistry)/$(repositoryName):$(Build.BuildId)'
+#               appSettings: |
+#                 -WEBSITES_PORT=8087
