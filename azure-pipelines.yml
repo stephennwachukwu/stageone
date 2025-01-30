@@ -3,8 +3,8 @@ trigger:
 
 variables:
   # Container Registry Variables
-  containerRegistry: 'your-acr-name.azurecr.io'
-  repositoryName: 'go-api'
+  containerRegistry: 'stageone.azurecr.io'
+  # repositoryName: 'stage-go-api'
   # Link to variable group
   group: 'go-api-variables'
 
