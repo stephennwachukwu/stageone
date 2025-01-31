@@ -64,9 +64,9 @@ func getInfo(w http.ResponseWriter, r *http.Request) {
     }
 
     response := InfoResponse{
-        Email:           "your-email@example.com",
+        Email:           "stephennwac007@gmail.com",
         CurrentDateTime: time.Now().UTC(),
-        GithubURL:      "https://github.com/yourusername/your-repo",
+        GithubURL:      "https://github.com/stephennwachukwu/stageone",
     }
 
     writeJSON(w, http.StatusOK, response)

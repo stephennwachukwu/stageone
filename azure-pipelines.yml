@@ -5,9 +5,8 @@ pool:
   name: 'coreone-xpool01EUS' 
 
 variables:
-  # Container Registry Variables
   repositoryName: 'stage-go-api'
-  GOVERSION: '1.21.1'  # Using a more recent version of Go
+  GOVERSION: '1.21.1'
   # Link to variable group
   # group: 'go-api-variables'
 
