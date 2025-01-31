@@ -13,3 +13,5 @@ environments:
     name: prod
     webapp_name: ${WEBAPP_NAME}
     container_registry: ${ACR_NAME}.azurecr.io
+    api_url: https://${WEBAPP_NAME}.azurewebsites.net
+    log_level: warn
