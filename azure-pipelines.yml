@@ -1,6 +1,9 @@
 trigger:
   - main
 
+pool:
+  name: 'coreone-xpool01EUS' 
+
 variables:
   # Container Registry Variables
   repositoryName: 'stage-go-api'
