@@ -49,12 +49,10 @@ stages:
       workingDirectory: '$(System.DefaultWorkingDirectory)'
       displayName: 'Run Go Tests'
     
-    # Install Docker
-    - task: DockerInstaller@0
-      displayName: 'Install Docker'
-      inputs:
-        dockerVersion: '20.10.x'
-        releaseType: 'stable'
+    # Verify Docker is available
+    - script: |
+        docker --version
+      displayName: 'Verify Docker Installation'
     
     # Build and push Docker image
     - task: Docker@2
