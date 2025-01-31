@@ -26,10 +26,10 @@ stages:
     displayName: 'Run Go Tests'
     steps:
     # Install build essentials
-    - script: |
-        sudo apt-get update
-        sudo apt-get install -y build-essential gcc make
-      displayName: 'Install Build Essentials'
+    # - script: |
+    #     sudo apt-get update
+    #     sudo apt-get install -y build-essential gcc make
+    #   displayName: 'Install Build Essentials'
       
     # Setup Go with specific version
     - task: GoTool@0
