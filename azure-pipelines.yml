@@ -21,15 +21,26 @@ resources:
 stages:
 - stage: Build
   jobs:
-  - job: BuildAndTest
-    displayName: Test and Build Docker Image Stage
+  - job: RunTests
+    displayName: 'Run Go Tests'
     steps:
-    # Run tests
-    - script: |
-        go test -v ./...
-      displayName: 'Run Tests'
-      
+    # Setup Go
+    - task: GoTool@0
+      inputs:
+        version: '1.13.5'
+      displayName: 'Install Go'
+    - task: Go@0
+      inputs:
+        command: 'test'
+        arguments: '-v'
+        workingDirectory: '$(System.DefaultWorkingDirectory)'    
+        
     # Build and push Docker image
+    - task: DockerInstaller@0
+      displayName: Docker Installer
+      inputs:
+        dockerVersion: 17.09.0-ce
+        releaseType: stable
     - task: Docker@2
       inputs:
         containerRegistry: 'acrone'
