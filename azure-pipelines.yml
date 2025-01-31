@@ -7,6 +7,7 @@ pool:
 variables:
   # Container Registry Variables
   repositoryName: 'stage-go-api'
+  GOVERSION: '1.21.1'  # Using a more recent version of Go
   # Link to variable group
   # group: 'go-api-variables'
 
@@ -24,24 +25,40 @@ stages:
   - job: RunTests
     displayName: 'Run Go Tests'
     steps:
-    # Setup Go
+    # Install build essentials
+    - script: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential gcc make
+      displayName: 'Install Build Essentials'
+      
+    # Setup Go with specific version
     - task: GoTool@0
       inputs:
-        version: '1.13.5'
-      displayName: 'Install Go'
-    - task: Go@0
-      inputs:
-        command: 'test'
-        arguments: '-v'
-        workingDirectory: '$(System.DefaultWorkingDirectory)'    
-        
-    # Build and push Docker image
+        version: '$(GOVERSION)'
+      displayName: 'Install Go $(GOVERSION)'
+    
+    # Download Go dependencies
+    - script: |
+        go mod download
+      workingDirectory: '$(System.DefaultWorkingDirectory)'
+      displayName: 'Download Dependencies'
+    
+    # Run tests
+    - script: |
+        go test -v ./...
+      workingDirectory: '$(System.DefaultWorkingDirectory)'
+      displayName: 'Run Go Tests'
+    
+    # Install Docker
     - task: DockerInstaller@0
-      displayName: Docker Installer
+      displayName: 'Install Docker'
       inputs:
-        dockerVersion: 17.09.0-ce
-        releaseType: stable
+        dockerVersion: '20.10.x'
+        releaseType: 'stable'
+    
+    # Build and push Docker image
     - task: Docker@2
+      displayName: 'Build and Push Docker Image'
       inputs:
         containerRegistry: 'acrone'
         repository: '$(repositoryName)'
