@@ -7,8 +7,8 @@ pool:
 variables:
   repositoryName: 'stage-go-api'
   GOVERSION: '1.21.1'
-  webAppName: 'your-webapp-name'
-  resourceGroup: 'your-resource-group'
+  webAppName: 'stageone'
+  resourceGroup: 'stancorp_appreg_EUS'
   containerRegistry: 'acrone'
   azureServiceConnection: 'appservice' 
 
@@ -78,26 +78,38 @@ stages:
       runOnce:
         deploy:
           steps:
+
+          # First authenticate with Azure
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: 'appserv'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                # Verify authentication
+                az account show
+                
+                # Deploy the container
+                az webapp config container set \
+                  --name $(webAppName) \
+                  --resource-group $(resourceGroup) \
+                  --docker-custom-image-name $(containerRegistry)/$(repositoryName):$(Build.BuildId) \
+                  --docker-registry-server-url https://$(containerRegistry)
+
           - task: AzureWebAppContainer@1
             displayName: 'Deploy Container to Azure Web App'
             inputs:
               azureSubscription: '$(AZURE_SUBSCRIPTION)'
+              resourceGroupName: '$(resourceGroup)'
               appName: '$(WEBAPP_NAME)'
               containers: '$(containerRegistry)/$(repositoryName):$(Build.BuildId)'
               appSettings: |
                 -WEBSITES_PORT=8087
                 -WEBSITES_ENABLE_APP_SERVICE_STORAGE=false
 
-          # Add health check after deployment
           - script: |
-              echo "Waiting for deployment to stabilize..."
-              sleep 30  # Give the container time to start
-              
-              # Check if the application is responding
-              response=$(curl -s -o /dev/null -w "%{http_code}" https://$(webAppName).azurewebsites.net/)
-              if [ "$response" = "200" ]; then
-                echo "Deployment successful! Application is responding."
-              else
-                echo "Warning: Application might not be fully started. Status code: $response"
-                echo "Please check the application logs in Azure Portal."
-              fi
+              sleep 30
+              echo "Checking deployment status..."
+              curl -s -o /dev/null -w "%{http_code}" https://$(webAppName).azurewebsites.net/
+            displayName: 'Verify Deployment'
+            # continueOnError: true
