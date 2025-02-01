@@ -8,9 +8,7 @@ variables:
   repositoryName: 'stage-go-api'
   GOVERSION: '1.21.1'
   webAppName: 'stageone'
-  resourceGroup: 'stancorp_appreg_EUS'
   containerRegistry: 'acrone'
-  azureServiceConnection: 'appservice' 
 
 resources:
   repositories:
@@ -56,60 +54,14 @@ stages:
       displayName: 'Verify Docker Installation'
     
     # Build and push Docker image
-    # - task: Docker@2
-    #   displayName: 'Build and Push Docker Image'
-    #   inputs:
-    #     containerRegistry: '$(containerRegistry)'
-    #     repository: '$(repositoryName)'
-    #     command: 'buildAndPush'
-    #     Dockerfile: '**/Dockerfile'
-    #     tags: |
-    #       $(Build.BuildId)
-    #       latest
-
-- stage: Deploy
-  dependsOn: Build
-  condition: succeeded()
-  jobs:
-  - deployment: DeployToAzure
-    displayName: 'Deploy to Azure Web App'
-    environment: 'production'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-
-          # First authenticate with Azure
-          - task: AzureCLI@2
-            inputs:
-              azureSubscription: '$(AZURE_SUBSCRIPTION)'
-              scriptType: 'bash'
-              scriptLocation: 'inlineScript'
-              inlineScript: |
-                # Verify authentication
-                az account show
-                
-                # Deploy the container
-                az webapp config container set \
-                  --name $(webAppName) \
-                  --resource-group $(resourceGroup) \
-                  --docker-custom-image-name $(containerRegistry)/$(repositoryName):$(Build.BuildId) \
-                  --docker-registry-server-url https://$(containerRegistry)
-
-          - task: AzureWebAppContainer@1
-            displayName: 'Deploy Container to Azure Web App'
-            inputs:
-              azureSubscription: '$(AZURE_SUBSCRIPTION)'
-              resourceGroupName: '$(resourceGroup)'
-              appName: '$(WEBAPP_NAME)'
-              containers: '$(containerRegistry)/$(repositoryName):$(Build.BuildId)'
-              appSettings: |
-                -WEBSITES_PORT=8087
-                -WEBSITES_ENABLE_APP_SERVICE_STORAGE=false
-
-          - script: |
-              sleep 30
-              echo "Checking deployment status..."
-              curl -s -o /dev/null -w "%{http_code}" https://$(webAppName).azurewebsites.net/
-            displayName: 'Verify Deployment'
-            # continueOnError: true
+    - task: Docker@2
+      displayName: 'Build and Push Docker Image'
+      inputs:
+        containerRegistry: '$(containerRegistry)'
+        repository: '$(repositoryName)'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        buildContext: '$(System.DefaultWorkingDirectory)'
+        tags: |
+          $(Build.BuildId)
+          latest
