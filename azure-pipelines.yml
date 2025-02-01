@@ -5,7 +5,7 @@ pool:
   name: 'coreone-xpool01EUS' 
 
 variables:
-  repositoryName: 'stage-go-api'
+  repositoryName: 'stageGoApi'
   GOVERSION: '1.21.1'
   webAppName: 'stageone'
   containerRegistry: 'acrone'
