@@ -56,16 +56,16 @@ stages:
       displayName: 'Verify Docker Installation'
     
     # Build and push Docker image
-    - task: Docker@2
-      displayName: 'Build and Push Docker Image'
-      inputs:
-        containerRegistry: '$(containerRegistry)'
-        repository: '$(repositoryName)'
-        command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
-        tags: |
-          $(Build.BuildId)
-          latest
+    # - task: Docker@2
+    #   displayName: 'Build and Push Docker Image'
+    #   inputs:
+    #     containerRegistry: '$(containerRegistry)'
+    #     repository: '$(repositoryName)'
+    #     command: 'buildAndPush'
+    #     Dockerfile: '**/Dockerfile'
+    #     tags: |
+    #       $(Build.BuildId)
+    #       latest
 
 - stage: Deploy
   dependsOn: Build
