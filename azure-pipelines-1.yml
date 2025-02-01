@@ -1,0 +1,15 @@
+trigger:
+- production
+
+pool:
+  name: 'coreone-xpool01EUS'
+
+steps:
+  - task: AzureWebAppContainer@1
+    inputs:
+      azureSubscription: 'appserviceone'
+      appName: 'stageone'
+      deployToSlotOrASE: true
+      resourceGroupName: 'stancorp_appreg_EUS'
+      slotName: 'production'
+      containers: 'stageone.azurecr.io/stage-go-api:latest'
