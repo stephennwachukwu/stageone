@@ -82,7 +82,7 @@ stages:
           # First authenticate with Azure
           - task: AzureCLI@2
             inputs:
-              azureSubscription: 'appserv'
+              azureSubscription: '$(AZURE_SUBSCRIPTION)'
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               inlineScript: |
