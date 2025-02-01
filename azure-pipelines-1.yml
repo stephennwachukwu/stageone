@@ -12,4 +12,4 @@ steps:
       deployToSlotOrASE: true
       resourceGroupName: 'stancorp_appreg_EUS'
       slotName: 'production'
-      containers: 'stageone.azurecr.io/stage-go-api:latest'
+      containers: 'stageone.azurecr.io/stagegoapi:latest'
