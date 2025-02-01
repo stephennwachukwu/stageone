@@ -27,7 +27,7 @@ COPY --from=build /app/myapp .
 RUN apk --no-cache add ca-certificates tzdata
 
 # Expose port
-EXPOSE 8087
+EXPOSE 8080
 
 # Run the binary
 CMD ["./api"]

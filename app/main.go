@@ -64,7 +64,7 @@ func getInfo(w http.ResponseWriter, r *http.Request) {
     }
 
     response := InfoResponse{
-        Email:           "stephennwac007@gmail.com",
+        Email:           "stephennwac0007@gmail.com",
         CurrentDateTime: time.Now().UTC(),
         GithubURL:      "https://github.com/stephennwachukwu/stageone",
     }
@@ -75,7 +75,7 @@ func getInfo(w http.ResponseWriter, r *http.Request) {
 func main() {
     http.HandleFunc("/", enableCORS(getInfo))
 
-    port := ":8087"
+    port := ":8080"
     fmt.Printf("Server starting on port %s...\n", port)
     
     if err := http.ListenAndServe(port, nil); err != nil {
