@@ -64,7 +64,7 @@ func getInfo(w http.ResponseWriter, r *http.Request) {
     }
 
     response := InfoResponse{
-        Email:           "stephennwac0007@gmail.com",
+        Email:           "stephennwac007@gmail.com",
         CurrentDateTime: time.Now().UTC(),
         GithubURL:      "https://github.com/stephennwachukwu/stageone",
     }
