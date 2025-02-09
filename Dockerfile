@@ -8,7 +8,8 @@ COPY go.mod ./
 RUN go mod download
 
 # Copy the rest of the source code
-COPY *.go ./
+# COPY *.go ./
+COPY . ./
 RUN CGO_ENABLED=0 GOOS=linux go build -o /HNG
 
 # Run the tests in the container
