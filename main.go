@@ -4,9 +4,13 @@ import (
     "fmt"
     "log"
     "net/http"
-    "time"
+
+    "github.com/stephennwachukwu/hng/internal/handlers"
+    "github.com/stephennwachukwu/hng/internal/middleware"
 )
 
+<<<<<<< HEAD
+=======
 // InfoResponse represents the required response structure
 type InfoResponse struct {
     Email           string    `json:"email"`
@@ -63,7 +67,7 @@ func getInfo(w http.ResponseWriter, r *http.Request) {
     }
 
     response := InfoResponse{
-        Email:           "stephennwac0007@gmail.com",
+        Email:           "stephennwac007@gmail.com",
         CurrentDateTime: time.Now().UTC(),
         GithubURL:      "https://github.com/stephennwachukwu/stageone",
     }
@@ -71,6 +75,7 @@ func getInfo(w http.ResponseWriter, r *http.Request) {
     writeJSON(w, http.StatusOK, response)
 }
 
+>>>>>>> 9fd93ee046c582f2d130358593221129d2b25358
 func main() {
     http.HandleFunc("/", middleware.EnableCORS(handlers.GetInfo))
     http.HandleFunc("/api/classify-number", middleware.EnableCORS(handlers.GetNumberProperties))
