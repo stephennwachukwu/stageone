@@ -11,11 +11,11 @@ import (
 
 type NumberClassificationResponse struct {
     Number    interface{} `json:"number"`
-    IsPrime   bool       `json:"is_prime"`
-    IsPerfect bool       `json:"is_perfect"`
-    Properties []string  `json:"properties"`
-    DigitSum  int        `json:"digit_sum"`
-    FunFact   string     `json:"fun_fact"`
+    IsPrime   bool       `json:"is_prime,omitempty"`
+    IsPerfect bool       `json:"is_perfect,omitempty"`
+    Properties []string  `json:"properties,omitempty"`
+    DigitSum  int        `json:"digit_sum,omitempty"`
+    FunFact   string     `json:"fun_fact,omitempty"`
     Error     bool       `json:"error,omitempty"`
 }
 
@@ -31,12 +31,11 @@ func GetNumberProperties(w http.ResponseWriter, r *http.Request) {
     
     number, err := strconv.Atoi(numberParam)
     if err != nil {
-        response := NumberClassificationResponse{
+        w.WriteHeader(http.StatusBadRequest)
+        json.NewEncoder(w).Encode(NumberClassificationResponse{
             Number: numberParam,
             Error:  true,
-        }
-        w.WriteHeader(http.StatusBadRequest)
-        json.NewEncoder(w).Encode(response)
+        })
         return
     }
 

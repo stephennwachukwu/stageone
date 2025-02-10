@@ -42,6 +42,9 @@ func IsArmstrong(n int) bool {
 }
 
 func DigitSum(n int) int {
+    // Convert negative number to positive
+    n = int(math.Abs(float64(n)))
+    
     sum := 0
     for n > 0 {
         sum += n % 10
