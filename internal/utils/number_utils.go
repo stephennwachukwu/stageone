@@ -1,7 +1,10 @@
 package utils
 
 import (
+    "encoding/json"
+    "fmt"
     "math"
+    "net/http"
     "strconv"
 )
 
@@ -45,4 +48,30 @@ func DigitSum(n int) int {
         n /= 10
     }
     return sum
+}
+
+type NumbersAPIResponse struct {
+    Text string `json:"text"`
+}
+
+// GetFunFact fetches a math-related fun fact about a number from the Numbers API
+func GetFunFact(number int) (string, error) {
+    url := fmt.Sprintf("http://numbersapi.com/%d/math?json", number)
+    
+    resp, err := http.Get(url)
+    if err != nil {
+        return "", err
+    }
+    defer resp.Body.Close()
+
+    if resp.StatusCode != http.StatusOK {
+        return "", fmt.Errorf("API request failed with status: %d", resp.StatusCode)
+    }
+
+    var apiResponse NumbersAPIResponse
+    if err := json.NewDecoder(resp.Body).Decode(&apiResponse); err != nil {
+        return "", err
+    }
+
+    return apiResponse.Text, nil
 }
